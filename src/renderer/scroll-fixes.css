@@ -1,0 +1,259 @@
+/* ============================================================================
+ * EVIDENRA SCROLL & GLASSMORPHISM OPTIMIZATIONS
+ * Fixes für App.tsx Scroll-Probleme und Performance
+ * ============================================================================ */
+
+/* 1. GLOBALE SCROLL-STRUKTUR */
+.app-wrapper {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* Verhindert doppeltes Scrollen */
+  display: flex;
+  flex-direction: row;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  will-change: scroll-position;
+}
+
+.content-scroll {
+  min-height: 100%;
+  position: relative;
+}
+
+.page-container {
+  min-height: 100%;
+  padding-bottom: 2rem; /* Platz am Ende */
+}
+
+/* 2. GLASSMORPHISM SCROLL-OPTIMIERUNGEN */
+.glass-panel {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+  contain: layout style paint;
+}
+
+.glass-scrollable {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* 3. CUSTOM SCROLLBAR STYLING - UNIFIED CYAN THEME */
+.main-content::-webkit-scrollbar,
+.glass-scrollable::-webkit-scrollbar,
+[class*="overflow-y-auto"]::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track,
+.glass-scrollable::-webkit-scrollbar-track,
+[class*="overflow-y-auto"]::-webkit-scrollbar-track {
+  background: rgba(8, 145, 178, 0.05);
+  border-radius: 10px;
+}
+
+.main-content::-webkit-scrollbar-thumb,
+.glass-scrollable::-webkit-scrollbar-thumb,
+[class*="overflow-y-auto"]::-webkit-scrollbar-thumb {
+  background: rgba(8, 145, 178, 0.6);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover,
+.glass-scrollable::-webkit-scrollbar-thumb:hover,
+[class*="overflow-y-auto"]::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.8);
+}
+
+/* Firefox - Unified cyan theme */
+.main-content,
+.glass-scrollable,
+[class*="overflow-y-auto"] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(8, 145, 178, 0.6) rgba(8, 145, 178, 0.05);
+}
+
+/* Global scrollbar override for all containers */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(8, 145, 178, 0.6) rgba(8, 145, 178, 0.05);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(8, 145, 178, 0.05);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(8, 145, 178, 0.6);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.8);
+}
+
+/* 4. NEON-GLOW PERFORMANCE OPTIMIERUNGEN */
+.neon-element {
+  will-change: transform;
+  transform: translateZ(0); /* Hardware-Beschleunigung */
+  
+  /* Box-shadow statt filter für bessere Performance */
+  box-shadow: 
+    0 0 10px var(--neon-color, #8b5cf6),
+    0 0 20px var(--neon-color, #8b5cf6),
+    0 0 30px var(--neon-color, #8b5cf6);
+}
+
+.effects-container {
+  contain: layout style paint;
+}
+
+/* 5. RESPONSIVE HEIGHT MANAGEMENT */
+:root {
+  --header-height: 80px;
+  --footer-height: 0px;
+  --content-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+.content-area {
+  height: var(--content-height);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Mobile Anpassung */
+@media (max-width: 768px) {
+  .content-area {
+    height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - var(--header-height));
+  }
+  
+  .app-wrapper {
+    flex-direction: column;
+  }
+}
+
+/* 6. SCROLL SMOOTH BEHAVIOR */
+.main-content {
+  scroll-behavior: smooth;
+}
+
+/* 7. BACKDROP-FILTER PERFORMANCE */
+@supports (backdrop-filter: blur(10px)) {
+  .glass-panel {
+    backdrop-filter: blur(10px);
+  }
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* 8. TAB CONTAINER FIXES */
+.tab-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: visible; /* Lässt parent container scrollen */
+}
+
+/* 9. PREVENT LAYOUT SHIFT */
+* {
+  box-sizing: border-box;
+}
+
+img, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 10. ANIMATION PERFORMANCE */
+.fade-in-up {
+  will-change: transform, opacity;
+}
+
+.premium-card {
+  contain: layout style;
+}
+
+/* 11. SCROLLBAR UTILITIES - UNIFIED CYAN THEME */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+/* Cyan theme (like "wissen erweitern") */
+.scrollbar-thumb-cyan-600 {
+  scrollbar-color: rgba(8, 145, 178, 0.6) transparent;
+}
+
+.scrollbar-thumb-cyan-500 {
+  scrollbar-color: rgba(6, 182, 212, 0.6) transparent;
+}
+
+.scrollbar-thumb-purple-600 {
+  scrollbar-color: rgba(147, 51, 234, 0.6) transparent;
+}
+
+.scrollbar-thumb-purple-500 {
+  scrollbar-color: rgba(168, 85, 247, 0.6) transparent;
+}
+
+.scrollbar-track-transparent {
+  /* Handled by scrollbar-color above */
+}
+
+/* Hover effects */
+.hover\:scrollbar-thumb-cyan-500:hover {
+  scrollbar-color: rgba(6, 182, 212, 0.6) transparent;
+}
+
+.hover\:scrollbar-thumb-purple-500:hover {
+  scrollbar-color: rgba(168, 85, 247, 0.6) transparent;
+}
+
+/* 12. OVERFLOW DEBUG (Development only) */
+.debug-overflow * {
+  outline: 1px solid red !important;
+}
+
+.debug-overflow [class*="overflow"] {
+  outline: 2px solid yellow !important;
+}
+
+/* 13. SMOOTH TRANSITIONS */
+.transition-scroll {
+  transition: scroll-behavior 0.3s ease;
+}
+
+/* 14. CONTAINER QUERIES SUPPORT */
+@container (max-width: 768px) {
+  .content-scroll {
+    padding: 1rem;
+  }
+}

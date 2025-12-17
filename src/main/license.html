@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>License Key</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 30px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+        .container { 
+            text-align: center; 
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        h1 { 
+            margin-bottom: 20px; 
+            font-size: 22px; 
+            font-weight: 600;
+        }
+        input { 
+            width: 100%; 
+            padding: 12px 15px; 
+            font-size: 14px; 
+            border: 2px solid rgba(255,255,255,0.3); 
+            border-radius: 8px; 
+            margin-bottom: 20px;
+            text-align: center;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            font-weight: 500;
+        }
+        input:focus {
+            outline: none;
+            border-color: #fff;
+            background: white;
+        }
+        button { 
+            padding: 12px 24px; 
+            font-size: 14px; 
+            border: none; 
+            border-radius: 8px; 
+            margin: 5px;
+            cursor: pointer;
+            background: white;
+            color: #333;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .error { 
+            color: #ffcccb; 
+            margin-top: 15px; 
+            font-weight: 500;
+            min-height: 20px;
+        }
+        #loading { 
+            color: #90EE90; 
+            font-weight: 500;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 Enter Your License Key</h1>
+        <input type="text" id="licenseKey" placeholder="Enter your license key here..." />
+        <br>
+        <button onclick="validateLicense()">Validate License</button>
+        <button onclick="exitApp()">Exit</button>
+        <div id="error" class="error"></div>
+        <div id="loading" style="display: none;">Validating license...</div>
+    </div>
+    
+    <script>
+        async function validateLicense() {
+            const licenseKey = document.getElementById('licenseKey').value.trim();
+            if (!licenseKey) {
+                document.getElementById('error').textContent = 'Please enter a license key';
+                return;
+            }
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').textContent = '';
+            
+            try {
+                const result = await window.electronAPI.validateLicense(licenseKey);
+                document.getElementById('loading').style.display = 'none';
+                
+                if (result.valid) {
+                    document.getElementById('error').style.color = '#90EE90';
+                    document.getElementById('error').textContent = 'License valid! Starting application...';
+                    setTimeout(() => {
+                        window.electronAPI.startApp();
+                    }, 2000);
+                } else {
+                    document.getElementById('error').textContent = 'Invalid license key: ' + (result.error || 'Unknown error');
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').textContent = 'Error validating license: ' + error.message;
+            }
+        }
+        
+        function exitApp() {
+            window.electronAPI.exitApp();
+        }
+        
+        // Focus input on load and wait for DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('licenseKey').focus();
+        });
+        
+        // Allow Enter key to validate
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('licenseKey').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') validateLicense();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+                {/* METAPROMPT: Dynamic Coding with Personas */}
+                <div className="premium-card p-6 bg-gradient-to-br from-indigo-900/30 to-purple-900/30 border-2 border-indigo-500/50">
+                  <h3 className="text-2xl font-semibold mb-4 flex items-center">
+                    <Brain className="w-7 h-7 mr-2 text-indigo-400" />
+                    {language === 'de' ? '🧠 Dynamic Coding Personas (AI-Powered)' : '🧠 Dynamic Coding Personas (AI-Powered)'}
+                  </h3>
+                  <p className="mb-4 text-white/80">
+                    {language === 'de'
+                      ? 'Data-calibrated Personas (3-7), Live-Suggestions, Real-time Consistency Checking & Pattern Learning'
+                      : 'Data-calibrated Personas (3-7), Live Suggestions, Real-time Consistency Checking & Pattern Learning'}
+                  </p>
+
+                  <div className="mb-4 bg-black/30 rounded-xl p-4 text-sm">
+                    <p className="text-indigo-300 font-medium mb-2">
+                      {language === 'de' ? '✨ Vorteile:' : '✨ Benefits:'}
+                    </p>
+                    <ul className="space-y-1 text-white/70">
+                      <li>• {language === 'de' ? 'Personas werden auf IHRE Daten kalibriert' : 'Personas calibrated to YOUR data'}</li>
+                      <li>• {language === 'de' ? 'Live-Vorschläge während Kodierung' : 'Live suggestions during coding'}</li>
+                      <li>• {language === 'de' ? 'Echtzeit-Konsistenzprüfung' : 'Real-time consistency checking'}</li>
+                      <li>• {language === 'de' ? 'Pattern Learning aus vorherigen Kodierungen' : 'Pattern learning from previous codings'}</li>
+                    </ul>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-2xl transition-all transform hover:scale-105 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={performDynamicCodingWithPersonas}
+                      disabled={project.categories.length === 0 || project.documents.length === 0 || processing.active}
+                    >
+                      <Brain className="w-5 h-5 inline mr-2" />
+                      {language === 'de' ? 'Dynamic Coding starten' : 'Start Dynamic Coding'}
+                    </button>
+
+                    <button
+                      className="px-4 py-3 bg-gray-700/50 hover:bg-gray-600/50 rounded-2xl transition"
+                      onClick={() => setUseDynamicPersonas(!useDynamicPersonas)}
+                    >
+                      {useDynamicPersonas ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Calibrated Personas Display */}
+                {showPersonaDetails && codingPersonas.length > 0 && (
+                  <div className="premium-card p-6 bg-gradient-to-br from-purple-900/40 to-indigo-900/40">
+                    <h3 className="text-2xl font-bold mb-4 flex items-center">
+                      <Users className="w-7 h-7 mr-2 text-purple-400" />
+                      {language === 'de' ? 'Kalibrierte Personas' : 'Calibrated Personas'}
+                    </h3>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {codingPersonas.map((persona, idx) => (
+                        <div key={persona.id} className="bg-black/30 rounded-xl p-4">
+                          <h4 className="font-semibold text-lg text-purple-300 mb-2">{persona.name}</h4>
+                          <p className="text-sm text-white/70 mb-3">{persona.description}</p>
+                          <div className="mb-3">
+                            <p className="text-xs font-medium text-indigo-300 mb-1">{language === 'de' ? 'Kodierstil:' : 'Coding Style:'}</p>
+                            <p className="text-xs text-white/60">{persona.codingStyle}</p>
+                          </div>
+                          {persona.strengths && persona.strengths.length > 0 && (
+                            <div>
+                              <p className="text-xs font-medium text-green-300 mb-1">{language === 'de' ? 'Stärken:' : 'Strengths:'}</p>
+                              <ul className="text-xs text-white/60 space-y-1">
+                                {persona.strengths.map((strength, i) => (
+                                  <li key={i}>• {strength}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {persona.calibrationNotes && (
+                            <p className="text-xs text-yellow-300 mt-2">📝 {persona.calibrationNotes}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
