@@ -1,6 +1,6 @@
 {
   "name": "evidenra-ultimate",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "EVIDENRA Ultimate - AKI Method Research Tool",
   "main": "src/main/main.js",
   "scripts": {

@@ -15,7 +15,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Console toggle
   toggleDevTools: () => ipcRenderer.invoke('toggle-devtools'),
   // Open external URL (for Magic Link)
-  openExternal: (url) => ipcRenderer.invoke('open-external', url)
+  openExternal: (url) => ipcRenderer.invoke('open-external', url),
+  // PDF Processing via Main Process (pdf-parse)
+  processPDF: (arrayBuffer) => ipcRenderer.invoke('process-pdf', arrayBuffer)
 });
 
 // Expose Electron APIs for auth
